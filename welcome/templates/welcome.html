@@ -20,7 +20,7 @@
         </nav>  
     </header>
     <div class="container">
-        <form class="form-horizontal col-sm-6"  >
+        <form id="change_form" class="form-horizontal col-sm-6" method="GET" action="/change/" >
             <div class="form-group ">
                 <label class="col-sm-4 control-label">主控板IP地址</label>
                 <div class="col-sm-8">
@@ -61,15 +61,30 @@
                     || isValidIP($("input[name=UPS_ip]").val()) == false) {
                     return alert("ip 地址有误，请重新输入");
                 }
-                
-                timer = setInterval("dec_value()", 1000);
+                var host_ip = $("input[name=host_ip]").val();
+                var UPS_ip = $("input[name=UPS_ip]").val();
+
+                $.ajax({  
+                    type:"GET",  
+                    data: {"host_ip":host_ip, "UPS_ip":UPS_ip},  
+                    url: "/change/", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致  
+                    cache: false,  
+                    dataType: "text",  
+                    success: function(result, statues, xml){  
+                        console.log(result);                                         //成功时弹出view传回来的结果  
+                    },  
+                    error: function(error){  
+                        console.log("false:" + error);  
+                    }  
+                });  
+                timer = setInterval("dec_timer()", 1000);
                 $('#ReStart').modal('toggle');
             });
 
 
 
             var secs = 30;
-            dec_value = function() {
+            dec_timer = function() {
                 if (secs == 0) {
                     clearInterval(timer);
                 }

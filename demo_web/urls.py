@@ -20,4 +20,5 @@ from welcome import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$',views.welcome),
+    url(r'^change/$',views.change),
 ]
