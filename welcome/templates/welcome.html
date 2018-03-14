@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
-    <!-- <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/welcome.css' %}">
     <script src="{% static 'js/jquery.min.js' %}"></script>
@@ -21,45 +20,70 @@
         </nav>  
     </header>
     <div class="container">
-        <form class="form-horizontal col-sm-6 ">
+        <form class="form-horizontal col-sm-6"  >
             <div class="form-group ">
-                <label for="inputEmail3" class="col-sm-4 control-label">IP地址</label>
+                <label class="col-sm-4 control-label">主控板IP地址</label>
                 <div class="col-sm-8">
-                    <input  class="form-control" value="192.168.0.1">
+                    <input name="host_ip" class="form-control" value="{{ host_ip }}">
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputPassword3" class="col-sm-4 control-label">电源管理器(UPS)地址</label>
+                <label class="col-sm-4 control-label">电源管理器(UPS)地址</label>
                 <div class="col-sm-8">
-                    <input class="form-control" value="192.168.0.32">
+                    <input name="UPS_ip" class="form-control" value="{{ UPS_ip }}">
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-6">
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">保存</button>
+                    <button type="button" class="btn btn-default" id="confirm_btn">保存并重启</button>
                     <button class="btn btn-default" >取消</button>
                 </div>
             </div>
-        </form>
-
-        <!-- Modal -->
-        <!-- <div class="modal fade" id="myModal" data-backdrop="static"> -->
-        <div class="modal fade" id="myModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body modal_container">
-                        <p class="glyphicon glyphicon-refresh spin icon"></p>
-                        <p>系统重启中</p>
+            <!-- Modal -->
+            <!-- <div class="modal fade" id="myModal" data-backdrop="static"> -->
+            <div class="modal fade" id="ReStart">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body modal_container">
+                            <p class="glyphicon glyphicon-refresh spin icon"></p>
+                            <p>系统重启中...耐心等待<span class="time_red"> 30 </span>秒后，重新连接网页。</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
     <script type="text/javascript">
-        $(document).ready(function{
-            var 
-        })
-    </script>    
+        $(document).ready(function() {
+            
+            $("#confirm_btn").on("click", function(){
+                if (isValidIP($("input[name=host_ip]").val()) == false
+                    || isValidIP($("input[name=UPS_ip]").val()) == false) {
+                    return alert("ip 地址有误，请重新输入");
+                }
+                
+                timer = setInterval("dec_value()", 1000);
+                $('#ReStart').modal('toggle');
+            });
+
+
+
+            var secs = 30;
+            dec_value = function() {
+                if (secs == 0) {
+                    clearInterval(timer);
+                }
+                $(".time_red").text(" " + secs + " ");
+                secs -= 1;
+            }
+
+            function isValidIP(ip) {
+                var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+                return reg.test(ip);
+            } 
+        });
+    </script>        
 </body>
+
 </html>
 
