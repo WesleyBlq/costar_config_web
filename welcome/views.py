@@ -13,20 +13,23 @@ def welcome(request):
     cfg = configparser.ConfigParser()
     cfg.read(config_file_path, encoding = 'utf-8-sig')
     host_ip = cfg.get("server", "ip")
+    gateway = cfg.get("server", "gateway")
     UPS_ip = cfg.get("server", "ups_ip")
-    
 
     return render(request, 'welcome.html', {'title': title, "host_ip": host_ip, \
-        "UPS_ip": UPS_ip})
+        "UPS_ip": UPS_ip, "gateway": gateway})
 
 def change(request):
     host_ip = request.GET["host_ip"]
     UPS_ip = request.GET["UPS_ip"]
+    gateway = request.GET["gateway"]
+    
 
     cfg = configparser.ConfigParser()
     cfg.read(config_file_path, encoding = 'utf-8-sig')
     cfg.set("server", "ups_ip", UPS_ip)
     cfg.set("server", "ip", host_ip)
+    cfg.set("server", "gateway", gateway)
     cfg.write(open(config_file_path, "w"))
     
     with open('/etc/network/interfaces') as fh:
@@ -34,5 +37,5 @@ def change(request):
         content = re.sub("address " + r'*.*.*.*', "adress 192.168.100.100", content)
         print(content)
     # call('restart')
-    
+
     return HttpResponse("success")
