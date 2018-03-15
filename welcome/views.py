@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import configparser
+from subprocess import call
+import re
 
 config_file_path = "../bhw_cos_gateway/config.ini"
 
@@ -26,5 +28,11 @@ def change(request):
     cfg.set("server", "ups_ip", UPS_ip)
     cfg.set("server", "ip", host_ip)
     cfg.write(open(config_file_path, "w"))
-    # ip, port = cfg.get("server", "ups_ip"), int(cfg.get("server", "ups_port"))
+    
+    with open('/etc/network/interfaces') as fh:
+        content = fh.read()
+        content = re.sub("address " + r'*.*.*.*', "adress 192.168.100.100", content)
+        print(content)
+    # call('restart')
+    
     return HttpResponse("success")
