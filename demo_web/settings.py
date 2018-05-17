@@ -107,10 +107,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 # and os.environ["ARM_SYS_VERSION"] == "COSTAR"
-if os.getenv("ARM_SYS_VERSION") is not None:
-    TIME_ZONE = "uclibc/Etc/UTC"     
-else:
-    TIME_ZONE = 'UTC'
+# if os.getenv("ARM_SYS_VERSION") is not None:
+# TIME_ZONE = "uclibc/Etc/UTC"     
+# else:
+TIME_ZONE = 'UTC'
 
 
 

@@ -50,6 +50,16 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-4 control-label">工作串口（*慎重修改）</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="camera_type">
+                        <option value="1" {% if serial_num == "1" %} selected="selected" {% endif %} >串口1</option>
+                        <option value="2" {% if serial_num == "2" %} selected="selected" {% endif %}>串口2</option>
+                        <option value="3" {% if serial_num == "3" %} selected="selected" {% endif %}>串口3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-6">
                     <button type="button" class="btn btn-default" id="confirm_btn">保存并重启</button>
                     <button class="btn btn-default" >取消</button>

@@ -16,6 +16,7 @@ def welcome(request):
     gateway = cfg.get("server", "gateway")
     UPS_ip = cfg.get("server", "ups_ip")
     camera_type = cfg.get("server", "camera_type")
+    serial_num = cfg.get("server", "serial_num")
 
     return render(request, 'welcome.html', {'title': title, "host_ip": host_ip, \
         "UPS_ip": UPS_ip, "gateway": gateway, "camera_type": camera_type})
@@ -25,6 +26,7 @@ def change(request):
     UPS_ip = request.GET["UPS_ip"]
     gateway = request.GET["gateway"]
     camera_type = request.GET["camera_type"]
+    serial_num = request.GET["serial_num"]
 
     cfg = configparser.ConfigParser()
     cfg.read(config_file_path, encoding = 'utf-8-sig')
@@ -32,6 +34,7 @@ def change(request):
     cfg.set("server", "ip", host_ip)
     cfg.set("server", "gateway", gateway)
     cfg.set("server", "camera_type", camera_type)
+    cfg.set("server", "serial_num", serial_num)
     cfg.write(open(config_file_path, "w"))
     
     # 修改linux系统固定IP
