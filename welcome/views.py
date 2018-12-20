@@ -17,9 +17,11 @@ def welcome(request):
     UPS_ip = cfg.get("server", "ups_ip")
     camera_type = cfg.get("server", "camera_type")
     serial_num = cfg.get("server", "serial_num")
+    default_focus_speed = cfg.get("camera", "default_focus_speed")
 
     return render(request, 'welcome.html', {'title': title, "host_ip": host_ip, \
-        "UPS_ip": UPS_ip, "gateway": gateway, "camera_type": camera_type})
+        "UPS_ip": UPS_ip, "gateway": gateway, "camera_type": camera_type, \
+        "default_focus_speed": default_focus_speed, "serial_num": serial_num})
 
 def change(request):
     host_ip = request.GET["host_ip"]
@@ -46,6 +48,7 @@ def change(request):
 
     with open('/etc/network/interfaces', 'w') as fw:
         fw.write(content)
+    
     call('reboot')
 
     return HttpResponse("success")

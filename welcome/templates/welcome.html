@@ -1,5 +1,6 @@
 {% load staticfiles %}
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -43,16 +44,28 @@
                 <label class="col-sm-4 control-label">白光镜头类型</label>
                 <div class="col-sm-8">
                     <select class="form-control" name="camera_type">
-                        <option value="500" {% if camera_type == "500" %} selected="selected" {% endif %} >500mm</option>
-                        <option value="750" {% if camera_type == "750" %} selected="selected" {% endif %}>750mm</option>
-                        <option value="1000" {% if camera_type == "1000" %} selected="selected" {% endif %}>1000mm</option>
+                        <option value="500" {% if  camera_type  == "500" %} selected="selected" {% endif %} >500mm</option>
+                        <option value="750" {% if  camera_type  == "750" %} selected="selected" {% endif %}>750mm</option>
+                        <option value="1000" {% if camera_type  == "1000" %} selected="selected" {% endif %}>1000mm</option>
                     </select>
                 </div>
             </div>
+
+            
+            <div class="form-group ">
+                <label class="col-sm-4 control-label">默认聚焦速度</label>
+                <div class="col-sm-8">
+                    <div class="form-inline">        
+                        <input name="default_focus_speed" class="form-control" value="{{ default_focus_speed }}">
+                        <span>输入整数，范围0~255</span>
+                    </div>
+                </div>
+            </div>
+            
             <div class="form-group">
                 <label class="col-sm-4 control-label">工作串口（*慎重修改）</label>
                 <div class="col-sm-8">
-                    <select class="form-control" name="camera_type">
+                    <select class="form-control" name="serial_num">
                         <option value="1" {% if serial_num == "1" %} selected="selected" {% endif %} >串口1</option>
                         <option value="2" {% if serial_num == "2" %} selected="selected" {% endif %}>串口2</option>
                         <option value="3" {% if serial_num == "3" %} selected="selected" {% endif %}>串口3</option>
@@ -88,14 +101,21 @@
                     || isValidIP($("input[name=gateway]").val()) == false) {
                     return alert("ip 地址有误，请重新输入");
                 }
+                
+                var default_focus_speed = $("input[name=default_focus_speed]").val()
+                if (isValidFacusSpeed(default_focus_speed) == false ) {
+                    return alert("聚焦速度应该为整数且范围在0~255，请重新输入");
+                }
+
                 var host_ip = $("input[name=host_ip]").val();
                 var gateway = $("input[name=gateway]").val();
                 var UPS_ip = $("input[name=UPS_ip]").val();
                 var camera_type = $("select[name=camera_type]").val();
+                var serial_num = $("select[name=serial_num]").val();
 
                 $.ajax({  
                     type:"GET",  
-                    data: {"host_ip":host_ip, "UPS_ip":UPS_ip, "gateway":gateway, "camera_type":camera_type},  
+                    data: {"host_ip":host_ip, "UPS_ip":UPS_ip, "gateway":gateway, "camera_type":camera_type, "serial_num":serial_num},  
                     url: "/change/", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致  
                     cache: false,  
                     dataType: "text",  
@@ -125,6 +145,19 @@
                 var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
                 return reg.test(ip);
             } 
+
+            function isValidFacusSpeed(obj) {
+                var reg=/^[1-9]\d*$|^0$/;
+                if (reg.test(obj) == true) {
+                    if (parseInt(obj) <= 255 && parseInt(obj) >= 0) {
+                        return true
+                    }else {
+                        return false
+                    }       
+                }else {
+                    return false
+                }
+            }
         });
     </script>        
 </body>
