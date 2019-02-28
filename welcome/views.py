@@ -72,20 +72,24 @@ def change(request):
     content = None
     with open('/etc/init.d/S50costar') as fh:
         content = fh.read()
-        print("########")
-        print(content)
+        # modify mac address
         content = re.sub(r'''([0-9A-F]{1,2}[:]){5}([0-9A-F]{1,2})''',
                         mac_addr,
-                        content,)
+                        content)
 
-        print("########")
-        print(content)
+        # modify gateway                        
+        # print(content)
+        content = re.sub("gw " + r'*.*.*.*',
+                         "gw " + gateway, content)
+        # print(content)                
 
     with open('/etc/init.d/S50costar', 'w') as fw:
         fw.write(content)
-    
-    cmd = "date -s " + sys_time
+    #
+    # reboot the system
+    #
     import os
+    cmd = "date -s " + sys_time
     os.system("date -s " + sys_time)
     os.system("hwclock -w")
     call('reboot')
